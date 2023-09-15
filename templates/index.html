@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Einfacher Übersetzer</title>
+</head>
+<body>
+    <h1>Einfacher Übersetzer</h1>
+    <form id="uebersetzen-form">
+        <label for="eingabe">Eingabe: </label>
+        <input type="text" id="eingabe" name="eingabe" required>
+        <button type="submit">Übersetzen</button>
+    </form>
+    <div id="ergebnis"></div>
+
+    <script>
+        document.getElementById('uebersetzen-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const eingabe = document.getElementById('eingabe').value;
+
+            fetch('/uebersetzen', {
+                method: 'POST',
+                body: new URLSearchParams({ 'eingabe': eingabe }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('ergebnis').textContent = data.uebersetzung;
+            })
+            .catch(error => console.error('Fehler:', error));
+        });
+    </script>
+</body>
+</html>
